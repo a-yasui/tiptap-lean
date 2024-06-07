@@ -121,7 +121,7 @@ input[type="checkbox"] {
 }
 </style>
 
-<script lang="ts">
+<script lang="ts" setup>
 import {Editor, EditorContent, BubbleMenu, useEditor} from '@tiptap/vue-3'
 import {StarterKit} from '@tiptap/starter-kit'
 import Focus from '@tiptap/extension-focus'
@@ -130,75 +130,53 @@ import {Markdown} from 'tiptap-markdown';
 import {Tate2Yoko} from "@/extension-tate2yoko";
 import {Yoko} from "@/extension-yoko";
 
-export default {
-  components: {
-    EditorContent,
-    BubbleMenu
-  },
+import { ref, computed } from 'vue';
 
-  data() {
-    return {
-      editor: null as Editor | null,
-      markdown_contents: "",
-    }
-  },
-
-  setup () {
-    const init_content =`
+const init_content =`
 <p>こんにちは。</p>
 <p>これはテスト文章です。</p>
 <p>わざわざ青空文庫から持ってくるような事はしません。面倒ですもの。</p>
 <p>「このように日本語は綺麗に表示されます。」</p>
 <p>しかし12といった縦中横や、ABCDEFといったアルファベッドの横書きはまだまだっぽい</p>`;
 
-    let markdown_contents = "";
-    const editor = useEditor({
-      content: init_content,
-      extensions: [
-        StarterKit.configure({
-          heading: {
-            levels: [1, 2],
-          },
-          strike: {
-            HTMLAttributes: {
-              class: 'strike',
-            },
-          },
-        }),
-        Focus.configure({
-          className: 'has-focus',
-          mode: 'all',
-        }),
-        Markdown,
-        Tate2Yoko,
-        Yoko
-      ],
-      onCreate: ({ editor }) => {
-        markdown_contents = editor.storage.markdown.getMarkdown()
+const markdown_contents = ref('');
+const editor = new Editor({
+  content: init_content,
+  extensions: [
+    StarterKit.configure({
+      heading: {
+        levels: [1, 2],
       },
-      // triggered on every change
-      onUpdate: ({ editor }) => {
-        markdown_contents = editor.storage.markdown.getMarkdown()
+      strike: {
+        HTMLAttributes: {
+          class: 'strike',
+        },
       },
-    })
-
-    return { editor, markdown_contents }
+    }),
+    Focus.configure({
+      className: 'has-focus',
+      mode: 'all',
+    }),
+    Markdown,
+    Tate2Yoko,
+    Yoko
+  ],
+  onCreate: ({ editor }) => {
+    markdown_contents.value = editor.storage.markdown.getMarkdown();
+    console.log('create');
   },
-
-  mounted() {
-    this.markdown_contents = "";
+  // triggered on every change
+  onUpdate: ({ editor }) => {
+    markdown_contents.value = editor.storage.markdown.getMarkdown()
   },
+})
 
-  computed: {
-    textarea_rows (): number {
-      const result = this.markdown_contents.split("\n").length + 1
-      if( result <= 4){ return 4; }
-      return result;
-    }
-  },
 
-  beforeUnmount() {
-    (this.editor) ? this.editor.destroy() : null;
-  },
-}
+const textarea_rows = computed(() => {
+  const result = markdown_contents.value.split('\n').length;
+  if(result < 10){
+    return 10;
+  }
+  return result;
+});
 </script>
