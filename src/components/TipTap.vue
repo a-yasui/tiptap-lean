@@ -122,12 +122,11 @@ input[type="checkbox"] {
 </style>
 
 <script lang="ts">
-import {Editor, EditorContent, BubbleMenu} from '@tiptap/vue-3'
+import {Editor, EditorContent, BubbleMenu, useEditor} from '@tiptap/vue-3'
 import {StarterKit} from '@tiptap/starter-kit'
 import Focus from '@tiptap/extension-focus'
 // import BubbleMenu from '@tiptap/extension-bubble-menu'
 import {Markdown} from 'tiptap-markdown';
-
 import {Tate2Yoko} from "@/extension-tate2yoko";
 import {Yoko} from "@/extension-yoko";
 
@@ -140,11 +139,11 @@ export default {
   data() {
     return {
       editor: null as Editor | null,
-      markdown_contents: ""
+      markdown_contents: "",
     }
   },
 
-  mounted() {
+  setup () {
     const init_content =`
 <p>こんにちは。</p>
 <p>これはテスト文章です。</p>
@@ -152,8 +151,8 @@ export default {
 <p>「このように日本語は綺麗に表示されます。」</p>
 <p>しかし12といった縦中横や、ABCDEFといったアルファベッドの横書きはまだまだっぽい</p>`;
 
-    this.markdown_contents = "";
-    this.editor = new Editor({
+    let markdown_contents = "";
+    const editor = useEditor({
       content: init_content,
       extensions: [
         StarterKit.configure({
@@ -174,18 +173,24 @@ export default {
         Tate2Yoko,
         Yoko
       ],
-      onCreate: ({ editor}) => {
-        this.markdown_contents = editor.storage.markdown.getMarkdown()
+      onCreate: ({ editor }) => {
+        markdown_contents = editor.storage.markdown.getMarkdown()
       },
       // triggered on every change
       onUpdate: ({ editor }) => {
-        this.markdown_contents = editor.storage.markdown.getMarkdown()
+        markdown_contents = editor.storage.markdown.getMarkdown()
       },
     })
+
+    return { editor, markdown_contents }
+  },
+
+  mounted() {
+    this.markdown_contents = "";
   },
 
   computed: {
-    textarea_rows () :number {
+    textarea_rows (): number {
       const result = this.markdown_contents.split("\n").length + 1
       if( result <= 4){ return 4; }
       return result;
