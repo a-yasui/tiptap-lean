@@ -2,32 +2,40 @@
 
 This template should help get you started developing with Vue 3 in Vite.
 
-## Recommended IDE Setup
+縦書きができる感じのエディターを TipTap で仮実装してみた。
 
-[VSCode](https://code.visualstudio.com/) + [Volar](https://marketplace.visualstudio.com/items?itemName=Vue.volar) (and disable Vetur).
+site: https://a-yasui.github.io/tiptap-lean/
 
-## Type Support for `.vue` Imports in TS
+## License
 
-TypeScript cannot handle type information for `.vue` imports by default, so we replace the `tsc` CLI with `vue-tsc` for type checking. In editors, we need [Volar](https://marketplace.visualstudio.com/items?itemName=Vue.volar) to make the TypeScript language service aware of `.vue` types.
+this is released under the MIT License. http://www.opensource.org/licenses/mit-license
 
-## Customize configuration
+## 使い方
 
-See [Vite Configuration Reference](https://vitejs.dev/config/).
+### インストール
 
-## Project Setup
-
-```sh
+```bash
 npm install
 ```
 
-### Compile and Hot-Reload for Development
+### 開発サーバーの立ち上げ
 
-```sh
+```bash
 npm run dev
 ```
 
-### Type-Check, Compile and Minify for Production
+### ビルド
 
-```sh
+```bash
 npm run build
 ```
+
+### デプロイ
+
+```bash
+npm run deploy
+```
+
+## 参考
+
+- [tiptap](https://www.tiptap.dev/)
